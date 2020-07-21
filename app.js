@@ -35,11 +35,7 @@ app.get('/', function(req, res){
             
         });
     });
-    
-
 });
-
-
 
 const url = process.env;
 
