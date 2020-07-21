@@ -15,11 +15,11 @@ app.get('/', function(req, res){
     const data = [];
     snoowrap.fromApplicationOnlyAuth({
         userAgent: 'tomblScrape',
-        clientId: '79zuLzR7DLY0Yg',
-        deviceId: 'DO_NOT_TRACK_THIS_DEVICE',
-        clientSecret: '--Ts4OMwUyKajRlwvckLgBk8C3k',
-        refreshToken: '30204028-oWTPPfrg8G9y96r2c7aty8EESiQ',
-        accessToken: '30204028-5k922d6nsgp6_SAaUkUojVGjZ1g'
+        clientId: process.env.CLIENT_ID,
+        deviceId: process.env.DEVICE_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        refreshToken: process.env.REFRESH_TOKEN,
+        accessToken: process.env.ACCESS_TOKEN
     }).then(r => {
         // Now we have a requester that can access reddit through a "user-less" Auth token
         return r.getSubreddit('spaceporn').getTop({ time: 'week', limit: 100}).then(posts => {
@@ -31,7 +31,6 @@ app.get('/', function(req, res){
                     url: post["url"]
                 });
             });
-            console.log(data);
             res.render('index', {topPosts: data});
             
         });
@@ -45,6 +44,7 @@ app.get('/', function(req, res){
 const url = process.env;
 
 if(url.USERDOMAIN == 'MARVIN'){
+    require('dotenv').config();
     https.createServer({
         key: fs.readFileSync('../private-key.key'),
         cert: fs.readFileSync('../rootSSL.pem')
