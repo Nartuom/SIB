@@ -1,0 +1,40 @@
+<!DOCTYPE <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Space is Beautiful</title>
+        <meta name="description" content="A site for humans who like to look at pictures of the universe">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="/stylesheets/astro.css">
+    </head>
+    <body>
+        <main class="container">
+            <div id="title-plate">
+                <h1>Space is Beautiful</h1>
+                <p>A collection of 100 amazing images pulled from the <a href="https://www.reddit.com/r/spaceporn/top/?t=all"> r/SpacePorn SubReddit</a></p>
+            </div>
+            
+            <div class="grid">
+                <% topPosts.forEach((post) => { %>
+                    <div class='grid-item post-container'>     
+                       <a href='<%= post['url'] %>'>
+                            <div class="img-wrap">
+                                <img src='<%= post['url'] %>' alt='<%= post['title'] %>'></img>
+                            </div>
+                            <p><%= post['title'] %></p>
+                            <!-- <p>Posted on Reddit by <%= post["author"].name %></p> -->
+                        </a>
+                        
+                    </div>
+                <% }); %>
+                
+            </div>
+        </main>
+        
+        <script async defer></script>
+    </body>
+</html>
