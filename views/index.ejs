@@ -15,10 +15,10 @@
         <main class="container">
             <div id="title-plate">
                 <h1>Space is Beautiful</h1>
-                <p>A collection of 100 amazing images pulled from the <a href="https://www.reddit.com/r/spaceporn/top/?t=all"> r/SpacePorn SubReddit</a></p>
+                <p>A collection of 50 amazing images pulled from the <a href="https://www.reddit.com/r/spaceporn/top/?t=all"> r/SpacePorn SubReddit</a></p>
             </div>
             
-            <div class="grid">
+            <div id="listingTable" class="grid">
                 <% topPosts.forEach((post) => { %>
                     <div class='grid-item post-container'>     
                        <a href='<%= post['url'] %>'>
@@ -31,10 +31,14 @@
                         
                     </div>
                 <% }); %>
+                <div>
+                    <a></a>
+
+                </div>
                 
             </div>
         </main>
         
-        <script async defer></script>
+        <script async defer src="/scripts/scraper.js"></script>
     </body>
 </html>
