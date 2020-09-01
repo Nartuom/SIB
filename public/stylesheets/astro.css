@@ -44,6 +44,7 @@ h1 {
   grid-auto-flow: row;
   grid-template-rows: auto;
   row-gap: 0.5rem;
+  column-gap: 0.5rem;
   width: 100%;
   height: 100%;
   margin: 0 0;
@@ -54,8 +55,6 @@ h1 {
   justify-content: center;
   justify-self: center;
   height: auto;
-  padding: 0.25rem 0.25rem;
-  margin: 0.5rem 0.5rem 0.5rem;
 }
 .img-wrap {
   height: 300px;
@@ -68,6 +67,13 @@ img {
   object-fit: cover;
   align-self: center;
   border-radius: 2%;
+}
+.pagination-nav {
+  margin: 2rem 0;
+  font-size: 24px;
+}
+.pagination-nav a {
+  margin-right: 2rem;
 }
 @media only screen and (max-width: 1200px) {
   h1 {
