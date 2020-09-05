@@ -11,17 +11,24 @@ body {
   margin: 0;
 }
 nav {
+  position: absolute;
+  top: 0;
   display: flex;
+  flex: 1;
   align-items: center;
   height: 70px;
+  justify-items: center;
 }
 form {
   display: flex;
-  width: 25%;
+  width: 100%;
   font-size: 22px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   margin: 0;
+}
+form div {
+  margin: 0 0.5rem;
 }
 form button {
   font-family: "Yanone Kaffeesatz", sans-serif;
