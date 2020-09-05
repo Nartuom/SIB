@@ -10,6 +10,29 @@ body {
   width: 100vw;
   margin: 0;
 }
+nav {
+  display: flex;
+  align-items: center;
+  height: 70px;
+}
+form {
+  display: flex;
+  width: 25%;
+  font-size: 22px;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+form button {
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-size: 22px;
+  height: 26px;
+  width: 50px;
+  border: none;
+  background-color: #ffffff;
+  color: #c3073f;
+  align-self: center;
+}
 p {
   margin: 0;
   color: #ffffff;
@@ -36,6 +59,9 @@ h1 {
   font-family: "Source Code Pro", cursive;
   text-transform: uppercase;
   margin: 0 0 1rem;
+}
+#earthIs {
+  color: #00cd00;
 }
 
 .grid {

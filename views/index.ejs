@@ -13,9 +13,40 @@
     </head>
     <body>
         <main class="container">
+            <nav>
+                <form action="/" method="POST">
+                    <label>I love...</label>
+                    <div>
+                        <label for="selectTheme">Space</label>
+                        <input id="spaceRad" type="radio" name="selectTheme" value="SpacePorn">
+                    </input>
+
+                    </div>
+                    
+                    <div>
+                        <label for="selectTheme">Earth</label>
+                        <input id="earthRad" type="radio" name="selectTheme" value="EarthPorn"></input>
+                    </div>
+                    
+                    <button>GO!</button>
+                </form>                
+            </nav>
             <div id="title-plate">
-                <h1>Space is Beautiful</h1>
-                <p>A collection of amazing images pulled from the <a href="https://www.reddit.com/r/spaceporn/top/?t=all"> r/SpacePorn SubReddit</a></p>
+                <% if(pageTheme == "SpacePorn") { %>
+                        <h1>Space is Beautiful</h1>
+
+                    <% } else { %>
+                    <h1 id="earthIs">Earth is Beautiful</h1>
+                    <% } %>
+
+                
+                
+                <p>A collection of amazing images pulled from the 
+                    <% if(pageTheme == "SpacePorn") { %>
+                        <a href="https://www.reddit.com/r/spaceporn/top/?t=all"> r/SpacePorn SubReddit</a></p>
+                    <% } else { %>
+                        <a href="https://www.reddit.com/r/earthporn/top/?t=all">r/EarthPorn SubReddit</a></p>
+                    <% } %> 
             </div>
             
             <div id="listingTable" class="grid">
@@ -23,9 +54,13 @@
                     <div class='grid-item post-container'>     
                        <a href='<%= post['url'] %>'>
                             <div class="img-wrap">
-                                <img src='<%= post['url'] %>' alt='<%= post['title'] %>'></img>
+                                <% if(post['url'].toLowerCase().match(/\.(jpg|png|gif|gif\:v, "")/g)) { %>
+                                    <img src='<%= post['url'] %>' alt='<%= post['title'] %>'></img>
+                               <% } else { %>
+                                    <iframe src='<%= post['url'] %>' title='<%= post['title'] %>'></iframe>
+                               <% } %>
                             </div>
-                            <p><%= post['title'] %></p>
+                            <p><%= post['url'] %></p>
                             <!-- <p>Posted on Reddit by <%= post["author"].name %></p> -->
                         </a>
                         
