@@ -50,7 +50,7 @@ app.get("/", function (req, res) {
     .then((r) => {
       return r
         .getSubreddit(theme)
-        .getTop({ time: "week", limit: 9 })
+        .getTop({ time: "all", limit: 9 })
         .then((posts) => {
           // do something with posts from the front page
           posts.forEach(function (post) {
@@ -85,7 +85,7 @@ app.get("/next-page", function (req, res) {
       // Now we have a requester that can access reddit through a "user-less" Auth token
       return r
         .getSubreddit(theme)
-        .getTop({ time: "week", after: `t3_${req.cookies.last}`, limit: 9 })
+        .getTop({ time: "all", after: `t3_${req.cookies.last}`, limit: 9 })
         .then((posts) => {
           // do something with posts from the front page
           posts.forEach(function (post) {
@@ -121,7 +121,7 @@ app.get("/prev-page", function (req, res) {
     .then((r) => {
       return r
         .getSubreddit(theme)
-        .getTop({ time: "week", before: `t3_${req.cookies.first}`, limit: 9 })
+        .getTop({ time: "all", before: `t3_${req.cookies.first}`, limit: 9 })
         .then((posts) => {
           // do something with posts from the front page
           posts.forEach(function (post) {

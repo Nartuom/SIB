@@ -29,7 +29,7 @@
                 </form>                
             </nav>
             <div id="title-plate">
-                <% if(pageTheme == "SpacePorn") { %>
+                <% if(pageTheme.toLowerCase() == "spaceporn" || pageTheme == null) { %>
                         <h1>Space is Beautiful</h1>
 
                     <% } else { %>
@@ -39,7 +39,7 @@
                 
                 
                 <p>A collection of amazing images pulled from the 
-                    <% if(pageTheme == "SpacePorn") { %>
+                    <% if(pageTheme.toLowerCase() == "spaceporn") { %>
                         <a href="https://www.reddit.com/r/spaceporn/top/?t=all"> r/SpacePorn SubReddit</a></p>
                     <% } else { %>
                         <a href="https://www.reddit.com/r/earthporn/top/?t=all">r/EarthPorn SubReddit</a></p>
@@ -54,10 +54,10 @@
                                 <% if(post['url'].toLowerCase().match(/\.(jpg|png|gif|gif\:v, "")/g)) { %>
                                     <img src='<%= post['url'] %>' alt='<%= post['title'] %>'></img>
                                <% } else { %>
-                                    <iframe src='<%= post['url'] %>' title='<%= post['title'] %>'></iframe>
+                                    <video ><source src='<%= post['url'] %>' title='<%= post['title'] %>'></video>
                                <% } %>
                             </div>
-                            <p><%= post['url'] %></p>
+                            <p><%= post['title'] %></p>
                             <!-- <p>Posted on Reddit by <%= post["author"].name %></p> -->
                         </a>
                         
