@@ -32,10 +32,9 @@
                     </div>
                 <% }); %>
                 <div class="pagination-nav">
-                    <% if(pageNumber !== 0){%>
-                        <a href="/">Previous Page</a>
-                    <% } %>
-                    
+                    <% if(pageNumber > 1 ) { %>
+                        <a href="/prev-page">Previous Page</a>
+                        <% } %>
                     <a href="/next-page">Next Page</a>
 
                 </div>

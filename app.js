@@ -4,15 +4,16 @@ const express = require("express"),
   fs = require("fs"),
   https = require("https"),
   app = express();
+const CookieParser = require('cookie-parser')
+  
 
 let snoowrap = require("snoowrap");
 const { Submission } = require("snoowrap");
 
-app.set("view engine", "ejs");
+app.set("view engine", "ejs"); 
 app.use(express.static("public"));
-let first;
-let last;
-let pageNumber = 0;
+app.use(CookieParser());
+
 let postObj = function (post) {
   return {
     title: post["title"],
@@ -24,6 +25,8 @@ let postObj = function (post) {
 //App Routes
 app.get("/", function (req, res) {
   const data = [];
+  let count = 1;
+  res.cookie("pageNumber", count);
   snoowrap
     .fromApplicationOnlyAuth({
       userAgent: "tomblScrape",
@@ -34,34 +37,21 @@ app.get("/", function (req, res) {
       accessToken: process.env.ACCESS_TOKEN,
     })
     .then((r) => {
-      if (pageNumber == 0) {
+              
         return r
-          .getSubreddit("spaceporn")
-          .getTop({ time: "week", limit: 9 })
-          .then((posts) => {
-            // do something with posts from the front page
-            posts.forEach(function (post) {
-              data.push(postObj(post));
-            });
-            first = data[0].id;
-            last = data[8].id;
-            res.render("index", { topPosts: data, pageNumber: pageNumber });
+        .getSubreddit("spaceporn")
+        .getTop({ time: "week", limit: 9 })
+        .then((posts) => {
+          // do something with posts from the front page
+          posts.forEach(function (post) {
+            data.push(postObj(post));
           });
-      } else {
-        return r
-          .getSubreddit("spaceporn")
-          .getTop({ time: "week", before: `t3_${first}`, limit: 9 })
-          .then((posts) => {
-            posts.forEach(function (post) {
-              data.push(postObj(post));
-            });
-            pageNumber--;
-            first = data[0].id;
-            last = data[8].id;
-            res.render("index", { topPosts: data, pageNumber: pageNumber });
-          });
-      }
-    });
+          res.cookie("first", data[0].id);
+          res.cookie("last", data[8].id);
+          console.log("Cookies: ", req.cookies)
+          res.render("index", {topPosts: data, pageNumber: count});
+        })
+    })
 });
 
 app.get("/next-page", function (req, res) {
@@ -79,28 +69,62 @@ app.get("/next-page", function (req, res) {
       // Now we have a requester that can access reddit through a "user-less" Auth token
       return r
         .getSubreddit("spaceporn")
-        .getTop({ time: "week", after: `t3_${last}`, limit: 9 })
+        .getTop({ time: "week", after: `t3_${req.cookies.last}`, limit: 9 })
         .then((posts) => {
           // do something with posts from the front page
           posts.forEach(function (post) {
             data.push(postObj(post));
           });
-          pageNumber++;
-          first = data[0].id;
-          last = data[8].id;
-          res.render("index", { topPosts: data, pageNumber: pageNumber });
+          let count = req.cookies.pageNumber;
+          count++;
+          res.cookie("pageNumber", count);
+          res.cookie("first", data[0].id);
+          res.cookie("last", data[8].id);
+          console.log("Cookies: ", req.cookies)
+          res.render("index", { topPosts: data, pageNumber: count});
         });
-    });
+    })
+});
+
+app.get("/prev-page", function(req, res){
+  const data = [];
+
+  snoowrap
+    .fromApplicationOnlyAuth({
+      userAgent: "tomblScrape",
+      clientId: process.env.CLIENT_ID,
+      deviceId: process.env.DEVICE_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      refreshToken: process.env.REFRESH_TOKEN,
+      accessToken: process.env.ACCESS_TOKEN,
+    })
+    .then((r) => {
+      return r
+          .getSubreddit("spaceporn")
+          .getTop({ time: "week", before: `t3_${req.cookies.first}`,  limit: 9 })
+          .then((posts) => {
+            // do something with posts from the front page
+            posts.forEach(function (post) {
+              data.push(postObj(post));
+            });
+            let count = req.cookies.pageNumber;
+            count--;
+            res.cookie("pageNumber", count);
+            res.cookie("first", data[0].id);
+            res.cookie("last", data[8].id);
+            console.log("Cookies: ", req.cookies)
+            res.render("index", {topPosts: data, pageNumber: count});
+          })
+    })
 });
 
 const url = process.env;
-
-if (url.USERDOMAIN == "MARVIN") {
+if (url.USERDOMAIN == "MARVIN"  || url.USERDOMAIN == "EGONSPENGLER") {
   require("dotenv").config();
   https
     .createServer(
       {
-        key: fs.readFileSync("../private-key.key"),
+        key: fs.readFileSync("../domain.key"),
         cert: fs.readFileSync("../rootSSL.pem"),
       },
       app
@@ -110,6 +134,6 @@ if (url.USERDOMAIN == "MARVIN") {
     });
 } else {
   app.listen(url.PORT || 3000, url.IP, function () {
-    console.log("Server Live at " + url.IP);
+    console.log("Server Live at " + process.env);
   });
 }
