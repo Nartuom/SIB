@@ -38,107 +38,100 @@ app.get("/", function (req, res) {
   let selectTheme = req.cookies.selectTheme;
   let theme = selectTheTheme(selectTheme);
   res.cookie("pageNumber", count);
-  snoowrap
-    .fromApplicationOnlyAuth({
+  const r = new snoowrap({
       userAgent: "tomblScrape",
       clientId: process.env.CLIENT_ID,
       deviceId: process.env.DEVICE_ID,
       clientSecret: process.env.CLIENT_SECRET,
       refreshToken: process.env.REFRESH_TOKEN,
       accessToken: process.env.ACCESS_TOKEN,
-    })
-    .then((r) => {
-      return r
-        .getSubreddit(theme)
-        .getTop({ time: "all", limit: 9 })
-        .then((posts) => {
-          // do something with posts from the front page
-          posts.forEach(function (post) {
-            data.push(postObj(post));
-          });
-          res.cookie("theme", theme);
-          res.cookie("first", data[0].id);
-          res.cookie("last", data[8].id);
-
-          res.render("index", {
-            topPosts: data,
-            pageNumber: count,
-            pageTheme: theme,
-          });
-        });
     });
+    return r
+      .getSubreddit(theme)
+      .getTop({ time: "all", limit: 9 })
+      .then((posts) => {
+        // do something with posts from the front page
+        posts.forEach(function (post) {
+          data.push(postObj(post));
+        });
+        res.cookie("theme", theme);
+        res.cookie("first", data[0].id);
+        res.cookie("last", data[8].id);
+
+        res.render("index", {
+          topPosts: data,
+          pageNumber: count,
+          pageTheme: theme,
+        });
+      });
 });
 
 app.get("/next-page", function (req, res) {
   const data = [];
   let theme = req.cookies.theme;
-  snoowrap
-    .fromApplicationOnlyAuth({
-      userAgent: "tomblScrape",
-      clientId: process.env.CLIENT_ID,
-      deviceId: process.env.DEVICE_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
-      accessToken: process.env.ACCESS_TOKEN,
-    })
-    .then((r) => {
-      // Now we have a requester that can access reddit through a "user-less" Auth token
-      return r
-        .getSubreddit(theme)
-        .getTop({ time: "all", after: `t3_${req.cookies.last}`, limit: 9 })
-        .then((posts) => {
-          // do something with posts from the front page
-          posts.forEach(function (post) {
-            data.push(postObj(post));
-          });
-          let count = req.cookies.pageNumber;
-          count++;
-          res.cookie("pageNumber", count);
-          res.cookie("first", data[0].id);
-          res.cookie("last", data[8].id);
-          res.render("index", {
-            topPosts: data,
-            pageNumber: count,
-            pageTheme: theme,
-          });
+  const r = new snoowrap({
+    userAgent: "tomblScrape",
+    clientId: process.env.CLIENT_ID,
+    deviceId: process.env.DEVICE_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken: process.env.REFRESH_TOKEN,
+    accessToken: process.env.ACCESS_TOKEN,
+  });
+  // Now we have a requester that can access reddit through a "user-less" Auth token
+    return r
+      .getSubreddit(theme)
+      .getTop({ time: "all", after: `t3_${req.cookies.last}`, limit: 9 })
+      .then((posts) => {
+        // do something with posts from the front page
+        posts.forEach(function (post) {
+          data.push(postObj(post));
         });
-    });
+        let count = req.cookies.pageNumber;
+        count++;
+        res.cookie("pageNumber", count);
+        res.cookie("first", data[0].id);
+        res.cookie("last", data[8].id);
+        res.render("index", {
+          topPosts: data,
+          pageNumber: count,
+          pageTheme: theme,
+        });
+      });
+    
 });
 
 app.get("/prev-page", function (req, res) {
   const data = [];
   let theme = req.cookies.theme;
 
-  snoowrap
-    .fromApplicationOnlyAuth({
-      userAgent: "tomblScrape",
-      clientId: process.env.CLIENT_ID,
-      deviceId: process.env.DEVICE_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      refreshToken: process.env.REFRESH_TOKEN,
-      accessToken: process.env.ACCESS_TOKEN,
-    })
-    .then((r) => {
-      return r
-        .getSubreddit(theme)
-        .getTop({ time: "all", before: `t3_${req.cookies.first}`, limit: 9 })
-        .then((posts) => {
-          // do something with posts from the front page
-          posts.forEach(function (post) {
-            data.push(postObj(post));
-          });
-          let count = req.cookies.pageNumber;
-          count--;
-          res.cookie("pageNumber", count);
-          res.cookie("first", data[0].id);
-          res.cookie("last", data[8].id);
-          res.render("index", {
-            topPosts: data,
-            pageNumber: count,
-            pageTheme: theme,
-          });
+  const r = new snoowrap({
+    userAgent: "tomblScrape",
+    clientId: process.env.CLIENT_ID,
+    deviceId: process.env.DEVICE_ID,
+    clientSecret: process.env.CLIENT_SECRET,
+    refreshToken: process.env.REFRESH_TOKEN,
+    accessToken: process.env.ACCESS_TOKEN,
+  });
+    return r
+      .getSubreddit(theme)
+      .getTop({ time: "all", before: `t3_${req.cookies.first}`, limit: 9 })
+      .then((posts) => {
+        // do something with posts from the front page
+        posts.forEach(function (post) {
+          data.push(postObj(post));
         });
-    });
+        let count = req.cookies.pageNumber;
+        count--;
+        res.cookie("pageNumber", count);
+        res.cookie("first", data[0].id);
+        res.cookie("last", data[8].id);
+        res.render("index", {
+          topPosts: data,
+          pageNumber: count,
+          pageTheme: theme,
+        });
+      });
+  
 });
 
 app.post("/", function (req, res) {
